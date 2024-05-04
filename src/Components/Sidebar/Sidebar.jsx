@@ -31,7 +31,7 @@ import img20 from '../../Images/img49.png'
 
 
 
-const Sidebar = (admindata) => {
+const Sidebar = ({admindata}) => {
 
     const sidebarItems = [
         { icon: img1, text: 'Dashboard', link: '/dashboard' },
@@ -62,17 +62,9 @@ const Sidebar = (admindata) => {
 
 
 
-    // const filteredSidebarItems = useMemo(() => {;
-    //     const { role, permissions } = admindata?.admindata || {};
-    //     if (!role || !permissions) {
-    //         return [];
-    //     }
-    //     if (role === 'superAdmin') {
-    //         return sidebarItems;
-    //     }
-    //     return sidebarItems.filter(item => permissions.includes(item.text));
-    // }, [admindata]);
-
+    const filteredSidebarItems = admindata ? (
+        admindata.role === 'superAdmin' ? sidebarItems : sidebarItems.filter(item => admindata.permissions.includes(item.text))
+    ) : [];
 
     return (
         <>
@@ -83,7 +75,7 @@ const Sidebar = (admindata) => {
                     </div>
 
                     <div className='sidebar3'>
-                        {sidebarItems.map((item, index) => (
+                        {filteredSidebarItems.map((item, index) => (
                             <Link to={item.link} key={index} className='sidebar-link'>
                                 <div className='sidebar4'>
                                     <div className='sidebar5'><img src={item.icon} alt="" /></div>

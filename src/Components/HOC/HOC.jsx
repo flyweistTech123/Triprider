@@ -22,6 +22,8 @@ const HOC = (WrappedComponent) => {
                     const response = await axios.get(`${BaseUrl}api/v1/admin/me`, getAuthHeaders());
                     const data = response.data.data;
                     setAdminData(data);
+                    // Save adminData to localStorage
+                    localStorage.setItem('adminData', JSON.stringify(data));
                     console.log("Fetched admin data:", data);
                 } catch (error) {
                     console.error('Error fetching admin data:', error);
@@ -29,8 +31,28 @@ const HOC = (WrappedComponent) => {
                 }
             };
 
-            fetchAdminData();
-        }, []);
+            // Check if adminData is already cached in localStorage on component mount
+            const cachedAdminData = localStorage.getItem('adminData');
+            if (cachedAdminData) {
+                setAdminData(JSON.parse(cachedAdminData));
+            } else {
+                // Fetch adminData from API if not found in localStorage
+                fetchAdminData();
+            }
+        }, []); 
+
+        const handleLogout = () => {
+            // Clear adminData from state
+            setAdminData(null);
+            // Clear adminData from localStorage
+            localStorage.removeItem('adminData');
+            // Perform other logout actions (e.g., redirect to login page)
+            // Example: history.push('/login');
+        };
+
+        const clearToken = () => {
+            localStorage.removeItem('token');
+        };
 
         return (
             <div className={`container1 ${show ? '' : 'sidebar-hidden'}`}>
@@ -40,7 +62,8 @@ const HOC = (WrappedComponent) => {
                     </div>
                 )}
                 <div className="content">
-                    <Navbar show={show} toggleSidebar={toggleSidebar} admindata={adminData} />
+                    <Navbar show={show} toggleSidebar={toggleSidebar} admindata={adminData}  onLogout={handleLogout}
+                        clearToken={clearToken}/>
                     <div className="child-component">
                         <WrappedComponent />
                     </div>

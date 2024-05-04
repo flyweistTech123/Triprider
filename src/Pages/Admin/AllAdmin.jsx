@@ -107,6 +107,13 @@ const AllAdmin = () => {
                                                     <td>{admin.role}</td>
                                                     <td>{admin.status}</td>
                                                     <td>
+                                                        <ul>
+                                                            {admin.permissions.map((permission, permIndex) => (
+                                                                <li key={permIndex}>{permission}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </td>
+                                                    <td>
                                                         <div className='service11'>
                                                             <div className='rider10'>
                                                                 <Link to={`/adminprofile`} className='sidebar-link' >
